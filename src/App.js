@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Components/Header";
-import CollectionCard from "./Components/CollectionCard";
+import Main from "./Components/Main";
 import "./App.css";
 import axios from "axios";
+import Punklist from "./Components/Punklist";
 
 function App() {
   const [punkListData, setPunkLinkData] = useState(null);
+  const [selectedPunk, setSelectedPunk] = useState(null);
 
   useEffect(() => {
     const getMyNfts = async () => {
@@ -20,6 +22,7 @@ function App() {
         );
         console.log(response.data, ".........................");
         setPunkLinkData(response.data.assets);
+        setSelectedPunk(response.data.assets[0]);
       } catch (e) {
         console.log(e, "wwwwwwwwwwwwww");
       }
@@ -30,12 +33,15 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <CollectionCard
-        id={0}
-        name={"Hamza"}
-        traits={[{ value: 7 }]}
-        image={"/punks/1.jpg"}
-      />
+      {punkListData && punkListData.length > 0 && (
+        <>
+          {selectedPunk ? <Main activePunk={selectedPunk} /> : ""}
+          <Punklist
+            punklistData={punkListData}
+            setSelectedPunk={setSelectedPunk}
+          />
+        </>
+      )}
     </div>
   );
 }
